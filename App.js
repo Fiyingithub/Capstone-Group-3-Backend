@@ -7,6 +7,7 @@ import { sequelize } from "./config/db.config.js";
 import routes from "./Routes/index.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./Swagger/swagger.js";
+import helmet from "helmet";
 
 dotenv.config();
 
@@ -14,13 +15,21 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 app.use(express.json());
 
+// helmet
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
 // CORS
 const corsOptions = {
-  origin: "*",
+  origin: ["http://localhost:4000"],
   credentials: true,
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 // Logger
 app.use(LoggerErrorHandler);

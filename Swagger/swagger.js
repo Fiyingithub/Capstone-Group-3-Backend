@@ -14,7 +14,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:4219/api",
+        url: "http://localhost:4219",
         description: "Development server",
       },
       {
@@ -120,7 +120,8 @@ const swaggerOptions = {
                   },
                   message: {
                     type: "string",
-                    example: "Resource already exists or conflicts with existing data",
+                    example:
+                      "Resource already exists or conflicts with existing data",
                   },
                   code: {
                     type: "integer",

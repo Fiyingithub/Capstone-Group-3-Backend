@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, deleteUser, getAllUsers, getUser, loginUser, updateUser } from "../Controllers/user.controller.js";
+import { changePassord, createUser, deleteUser, getAllUsers, getUser, loginUser, updateUser } from "../Controllers/user.controller.js";
 import { createUserValidator, loginUserValidator } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
@@ -123,10 +123,10 @@ const router = express.Router();
 
 /**
  * @swagger
- * /users/signup:
+ * /api/users/signup:
  *   post:
  *     summary: Create a new user
- *     tags: [Users]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -176,10 +176,10 @@ router.post("/signup", createUserValidator, createUser);
 
 /**
  * @swagger
- * /users/signin:
+ * /api/users/signin:
  *   post:
  *     summary: User login
- *     tags: [Users]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -228,10 +228,10 @@ router.post("/signin", loginUserValidator, loginUser);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Get a user by ID
- *     tags: [Users]
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -265,10 +265,10 @@ router.get("/:id", protectedAction, getUser);
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Get all users
- *     tags: [Users]
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -296,10 +296,10 @@ router.get("/", protectedAction, getAllUsers);
 
 /**
  * @swagger
- * /users/updateUser/{id}:
+ * /api/users/updateUser/{id}:
  *   patch:
  *     summary: Update a user by ID
- *     tags: [Users]
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -309,7 +309,6 @@ router.get("/", protectedAction, getAllUsers);
  *         schema:
  *           type: string
  *         description: User ID
- *         example: "12345"
  *     requestBody:
  *       required: true
  *       content:
@@ -339,12 +338,52 @@ router.get("/", protectedAction, getAllUsers);
  */
 router.patch("/updateUser/:id", protectedAction, updateUser);
 
+
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/changePassword:
+ *   patch:
+ *     summary: Reset a users's password
+ *     description: Reset a user's password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ */
+router.patch('/changePassword', protectedAction, changePassord)
+
+
+/**
+ * @swagger
+ * /api/users/{id}:
  *   delete:
  *     summary: Delete a user by ID
- *     tags: [Users]
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
  *     parameters:

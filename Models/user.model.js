@@ -7,33 +7,39 @@ const User = sequelize.define(
     id: {
       type: DataTypes.UUID,
       defaultValue: UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
-    email: { 
-      type: DataTypes.STRING, 
-      allowNull: false 
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    password: { 
-      type: DataTypes.STRING, 
-      allowNull: false 
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    firstname: { 
-      type: DataTypes.TEXT, 
-      allowNull: false 
+    firstname: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    lastname: { 
-      type: DataTypes.TEXT, 
-      allowNull: false 
+    lastname: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     role: {
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
       allowNull: false,
     },
-    phoneNumber: { 
-      type: DataTypes.STRING, 
-      allowNull: false 
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    }
+    // otpHash: { type: DataTypes.STRING }, 
+    // otpExpiresAt: { type: DataTypes.DATE },
   },
   { timestamps: true }
 );

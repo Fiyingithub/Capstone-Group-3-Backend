@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import logger from "../Utils/Logger.js";
-// import { sendEmail } from "../Services/email.service.js";
+import { sendEmail } from "../Services/email.service.js";
 
 dotenv.config();
 
@@ -19,16 +19,6 @@ export const createUser = async (req, res) => {
       return res.status(404).json({
         status: false,
         message: "Email has been used",
-        data: [],
-      });
-    }
-
-    const checkPhone = await User.findOne({ where: { phoneNumber } });
-
-    if (checkPhone) {
-      return res.status(404).json({
-        status: false,
-        message: "Phone Number has been used",
         data: [],
       });
     }
@@ -61,7 +51,7 @@ export const createUser = async (req, res) => {
       role: user.role
     };
 
-    // sendEmail(email, "Welcome to Book Reviews", "Thank you for signing up!");
+    sendEmail(email, "Welcome to Trackwise Expense", "Thank you for signing up!");
 
     return res.status(201).json({
       status: true,
@@ -132,14 +122,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// get user profile
-// export const userProfile = async (req, res) => {
-//   return res.status(200).json({
-//     status: true,
-//     message: "user profile retrieved successfully",
-//     data: req.user,
-//   });
-// };
 
 // get All users
 
@@ -264,3 +246,67 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
+
+export const changePassord = async (req, res)=> {
+  try {
+    const { id } = req.user
+    const { currentPassword, newPassword} = req.body
+
+    const user = await User.findByPk(id)
+
+    if (!user) {
+      return res.status(400).json({
+        status: false,
+        message: "User does not exist",
+        data: [],
+      });
+    }
+
+    const checkPasswordMatch = await bcrypt.compare(currentPassword, user.password)
+    if (!checkPasswordMatch) {
+      return res.status(401).json({
+        status: false,
+        message: "Current Password does not match",
+        data: [],
+      });
+    }
+
+    if(currentPassword === newPassword){
+      return res.status(401).json({
+        status: false,
+        message: "Password can not be the same",
+        data: [],
+      });
+    }
+
+    const Salt = await bcrypt.genSalt(10);
+    const hashed_password = await bcrypt.hash(newPassword, Salt);
+
+    user.password = hashed_password
+
+    await user.save()
+
+    const userDTO = {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      phoneNumber: user.phoneNumber,
+      role: user.role
+    };
+
+    return res.status(201).json({
+      status: true,
+      message: "User created successfully",
+      data: userDTO,
+    });
+    
+  } catch (error) {
+    logger.info("ERROR MESSAGE", error);
+    return res.status(500).json({
+      status: true,
+      message: "An error occured",
+      eror: true,
+    });
+  }
+}
