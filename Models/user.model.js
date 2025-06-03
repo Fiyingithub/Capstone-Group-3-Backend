@@ -37,9 +37,9 @@ const User = sequelize.define(
     isVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
-    // otpHash: { type: DataTypes.STRING }, 
-    // otpExpiresAt: { type: DataTypes.DATE },
+    },
+    otpHash: { type: DataTypes.STRING }, 
+    otpExpiresAt: { type: DataTypes.DATE },
   },
   { timestamps: true }
 );

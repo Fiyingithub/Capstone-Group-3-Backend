@@ -1,5 +1,5 @@
 import express from "express";
-import { changePassord, createUser, deleteUser, getAllUsers, getUser, loginUser, updateUser } from "../Controllers/user.controller.js";
+import { changePassord, createUser, deleteUser, getAllUsers, getUser, loginUser, updateUser, verifyOtp } from "../Controllers/user.controller.js";
 import { createUserValidator, loginUserValidator } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
@@ -226,6 +226,45 @@ router.post("/signup", createUserValidator, createUser);
  */
 router.post("/signin", loginUserValidator, loginUser);
 
+
+/**
+ * @swagger
+ * /api/users/verifyOtp:
+ *   post:
+ *     summary: Verify One-Time-Password
+ *     description: Verify One-Time-Password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               otp:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: Email verified successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ */
+router.post("/verifyOtp", verifyOtp)
+
 /**
  * @swagger
  * /api/users/{id}:
@@ -296,9 +335,9 @@ router.get("/", protectedAction, getAllUsers);
 
 /**
  * @swagger
- * /api/users/updateUser/{id}:
+ * /api/users/updateUserDetails:
  *   patch:
- *     summary: Update a user by ID
+ *     summary: Update a user(Protected)
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
@@ -308,7 +347,6 @@ router.get("/", protectedAction, getAllUsers);
  *         required: true
  *         schema:
  *           type: string
- *         description: User ID
  *     requestBody:
  *       required: true
  *       content:
@@ -336,7 +374,7 @@ router.get("/", protectedAction, getAllUsers);
  *       500:
  *         description: Internal server error
  */
-router.patch("/updateUser/:id", protectedAction, updateUser);
+router.patch("/updateUserDetails", protectedAction, updateUser);
 
 
 /**
