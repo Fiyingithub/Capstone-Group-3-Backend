@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import LoggerErrorHandler from "./Middlewares/LoggerErrorHandler.js";
 import LoggerRequestHandler from "./Middlewares/LoggerRequestHandler.js";
-import { sequelize } from "./config/db.config.js";
 import routes from "./Routes/index.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./Swagger/swagger.js";
 import helmet from "helmet";
+import { sequelize } from "./config/db.config.js";
 
 dotenv.config();
 
