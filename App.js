@@ -7,7 +7,7 @@ import routes from "./Routes/index.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./Swagger/swagger.js";
 import helmet from "helmet";
-import { sequelize } from "./config/db.config.js";
+import { sequelize } from "./config/db.js";
 
 dotenv.config();
 

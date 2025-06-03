@@ -1,5 +1,5 @@
 import { DataTypes, UUIDV4 } from "sequelize";
-import { sequelize } from "../config/db.config.js";
+import { sequelize } from "../config/db.js";
 
 const User = sequelize.define(
   "User",
@@ -38,7 +38,7 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    otpHash: { type: DataTypes.STRING }, 
+    otpHash: { type: DataTypes.STRING },
     otpExpiresAt: { type: DataTypes.DATE },
   },
   { timestamps: true }
