@@ -13,6 +13,15 @@ export const loginUserValidator = [
     body('password').escape().notEmpty().withMessage('Password Field is required')
 ]
 
+export const resendOtpValidator = [
+    body('email').escape().isEmail().withMessage('Enter a Valid email'),
+
+]
+export const verifyOtpValidator = [
+    body('email').escape().isEmail().withMessage('Enter a Valid email'),
+    body('otp').escape().isEmail().withMessage('OTP is required')
+]
+
 
 // export const createReviewValidator = [
 //     body('reviewer').escape().notEmpty().withMessage('Reviewer is required'),
