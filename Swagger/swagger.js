@@ -14,12 +14,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:55721",
-        description: "Development server",
-      },
-      {
         url: "https://capstone-group-3-backend.onrender.com",
-        description: "Production server",
       },
     ],
     schemes: {
