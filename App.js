@@ -24,7 +24,7 @@ app.use(
 
 // CORS
 const corsOptions = {
-  origin: ["http://localhost:4000"],
+  origin: ["http://localhost:55721", "*"],
   credentials: true,
   optionSuccessStatus: 200,
 };
