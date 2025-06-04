@@ -1,6 +1,6 @@
 import express from "express";
 import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resendOtp, resetPassword, updateUser, verifyOtp } from "../Controllers/user.controller.js";
-import { createUserValidator, loginUserValidator, resendOtpValidator, verifyOtpValidator } from "../Middlewares/validator.js";
+import { createUserValidator, loginUserValidator, resendOtpValidator, resetPasswordValidator, verifyOtpValidator } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
 const router = express.Router();
@@ -531,7 +531,7 @@ router.patch('/change-password', protectedAction, changePassword)
  *       '500':
  *         description: Internal server error
  */
-router.patch('/reset-password/{token}', protectedAction, resetPassword)
+router.patch('/reset-password/{token}', resetPasswordValidator, protectedAction, resetPassword)
 
 
 /**

@@ -22,13 +22,15 @@ export const verifyOtpValidator = [
     body('otp').escape().isEmail().withMessage('OTP is required')
 ]
 
+export const changePasswordValidator = [
+    body('currentPassword').escape().notEmpty().withMessage('Enter a password'),
+    body('newPassword').escape().notEmpty().withMessage('Password is required')
+]
 
-// export const createReviewValidator = [
-//     body('reviewer').escape().notEmpty().withMessage('Reviewer is required'),
-//     body('rating').escape().isInt({min:1, max: 10}).withMessage('Rating must be between 1 and 10'),
-//     body('comment').escape().notEmpty().withMessage('A comment is required'),
-//     param('bookId').escape().isInt().withMessage('A valid book id is required'),
-// ]
+export const resetPasswordValidator = [
+    body('password').escape().notEmpty().withMessage('A password is required'),
+    param('token').escape().notEmpty().withMessage('A token is required'),
+]
 
 export const validationResultMiddleware = (req, res, next) => {
     const errors = validationResult(req);
