@@ -1,6 +1,6 @@
 import express from "express";
-import { changePassord, createUser, deleteUser, getAllUsers, getUser, loginUser, updateUser, verifyOtp } from "../Controllers/user.controller.js";
-import { createUserValidator, loginUserValidator } from "../Middlewares/validator.js";
+import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resendOtp, resetPassword, updateUser, verifyOtp } from "../Controllers/user.controller.js";
+import { createUserValidator, loginUserValidator, resendOtpValidator, verifyOtpValidator } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
 const router = express.Router();
@@ -260,10 +260,90 @@ router.post("/signin", loginUserValidator, loginUser);
  *                   description: Success message
  *       '400':
  *         description: Bad request
+ *       '404':
+ *         description: User not found
  *       '500':
  *         description: Internal server error
  */
-router.post("/verifyOtp", verifyOtp)
+router.post("/verifyOtp", verifyOtpValidator, verifyOtp)
+
+
+/**
+ * @swagger
+ * /api/users/resendOtp:
+ *   post:
+ *     summary: Resend One-Time-Password
+ *     description: Resend One-Time-Password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: OTP sent successfully. Please verify your email.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request
+ *       '404':
+ *         description: User not Found
+ *       '500':
+ *         description: Internal server error
+ */
+
+router.post("/resendOtp", resendOtpValidator, resendOtp)
+
+
+/**
+ * @swagger
+ * /api/users/forgot-password:
+ *   post:
+ *     summary: forgot Password
+ *     description: forgot Password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: Reset Link sent to your email.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Bad request
+ *       '404':
+ *         description: User not Found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/forgot-password', resendOtpValidator, forgotPassword)
 
 /**
  * @swagger
@@ -379,10 +459,10 @@ router.patch("/updateUserDetails", protectedAction, updateUser);
 
 /**
  * @swagger
- * /api/users/changePassword:
+ * /api/users/change-password:
  *   patch:
- *     summary: Reset a users's password
- *     description: Reset a user's password
+ *     summary: Change users password
+ *     description: Change user password
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
@@ -413,8 +493,50 @@ router.patch("/updateUserDetails", protectedAction, updateUser);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/changePassword', protectedAction, changePassord)
+router.patch('/change-password', protectedAction, changePassword)
 
+
+
+/**
+ * @swagger
+ * /api/users/reset-password/{token}:
+ *   patch:
+ *     summary: Reset a user password
+ *     description: Reset a user password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *       '400':
+ *         description: Bad request
+ *       '500':
+ *         description: Internal server error
+ */
+router.patch('/reset-password/{token}', protectedAction, resetPassword)
+
+*     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
 
 /**
  * @swagger
