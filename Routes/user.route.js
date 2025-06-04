@@ -533,10 +533,6 @@ router.patch('/change-password', protectedAction, changePassword)
  */
 router.patch('/reset-password/{token}', protectedAction, resetPassword)
 
-*     parameters:
- *       - in: path
- *         name: id
- *         required: true
 
 /**
  * @swagger
