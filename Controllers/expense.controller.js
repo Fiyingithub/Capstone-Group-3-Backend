@@ -1,7 +1,7 @@
-const Expense = require('../models/Expense');
+import Expense from '../models/Expense');
 
 // CREATE
-exports.createExpense = async (req, res) => {
+export const createExpense = async (req, res) => {
   try {
     const { amount, description, category, paymentMethod } = req.body;
     const expense = new Expense({
