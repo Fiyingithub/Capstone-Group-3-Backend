@@ -21,7 +21,7 @@ const expenseSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: [ 'card', 'transfer'],
+    enum: [ 'cash', 'card', 'transfer'],
     default: 'other'
   },
   date: {
