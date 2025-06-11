@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const Expensecontroller = require('../controllers/expense.controller');
 const authMiddleware = require('../middleware/auth'); // adjust path if needed
