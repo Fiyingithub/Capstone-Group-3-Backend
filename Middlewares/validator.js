@@ -3,9 +3,7 @@ import { body, query, param, validationResult } from 'express-validator';
 export const createUserValidator = [
     body('email').notEmpty().withMessage('Email field is required').isEmail().withMessage('Enter a Valid email'),
     body('password').notEmpty().withMessage("Password field is required"),
-    body('firstname').notEmpty().withMessage('Firstname field  is required'),
-    body('lastname').notEmpty().withMessage('Lastname field is required'),
-    body('phoneNumber').notEmpty().withMessage('Phone Number is required')
+    body('fullname').notEmpty().withMessage('Firstname field  is required'),
 ]
 
 export const loginUserValidator = [
