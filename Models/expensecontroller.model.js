@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const expenseSchema = new mongoose.Schema({
   user: {
@@ -21,7 +21,7 @@ const expenseSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['cash', 'card', 'transfer', 'other'],
+    enum: [ 'cash', 'card', 'transfer', 'other' ],
     default: 'other'
   },
   date: {
@@ -30,4 +30,6 @@ const expenseSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Expense', expenseSchema);
+const Expense = mongoose.model('Expense', expenseSchema);
+
+export default Expense;

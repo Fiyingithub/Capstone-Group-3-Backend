@@ -1,7 +1,7 @@
-const Expense = require('../models/Expense');
+import Expense from '../models/expensecontroller.model.js';
 
 // CREATE
-exports.createExpense = async (req, res) => {
+export const createExpense = async (req, res) => {
   try {
     const { amount, description, category, paymentMethod } = req.body;
     const expense = new Expense({
@@ -19,7 +19,7 @@ exports.createExpense = async (req, res) => {
 };
 
 // GET All
-exports.getExpenses = async (req, res) => {
+export const getExpenses = async (req, res) => {
   try {
     const expenses = await Expense.find({ user: req.user.id }).sort({ date: -1 });
     res.json(expenses);
@@ -29,7 +29,7 @@ exports.getExpenses = async (req, res) => {
 };
 
 // GET one
-exports.getExpense = async (req, res) => {
+export const getExpense = async (req, res) => {
   try {
     const expense = await Expense.findOne({ _id: req.params.id, user: req.user.id });
     if (!expense) return res.status(404).json({ message: 'Expense not found' });
@@ -40,7 +40,7 @@ exports.getExpense = async (req, res) => {
 };
 
 // UPDATE
-exports.updateExpense = async (req, res) => {
+export const updateExpense = async (req, res) => {
   try {
     const updated = await Expense.findOneAndUpdate(
       { _id: req.params.id, user: req.user.id },
@@ -55,7 +55,7 @@ exports.updateExpense = async (req, res) => {
 };
 
 // DELETE
-exports.deleteExpense = async (req, res) => {
+export const deleteExpense = async (req, res) => {
   try {
     const deleted = await Expense.findOneAndDelete({ _id: req.params.id, user: req.user.id });
     if (!deleted) return res.status(404).json({ message: 'Expense not found' });
