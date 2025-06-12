@@ -1,35 +1,34 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from "../config/db.config.js"; 
 
-const expenseSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const Expense = sequelize.define('Expense', {
+  userId: {
+    type: DataTypes.INTEGER, 
+    allowNull: false,
   },
   amount: {
-    type: Number,
-    required: true
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
   description: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   category: {
-    type: String,
-    enum: ['food', 'transportation', 'bills', 'shopping', 'school-supplies', 'entertainment', 'other'],
-    default: 'other'
+    type: DataTypes.STRING, 
+    allowNull: false,
   },
   paymentMethod: {
-    type: String,
-    enum: [ 'cash', 'card', 'transfer', 'other' ],
-    default: 'other'
+    type: DataTypes.STRING, 
+    allowNull: false,
   },
   date: {
-    type: Date,
-    default: Date.now
-  }
+    type: DataTypes.DATEONLY, 
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+}}, 
+  {
+  timestamps: true,
 });
-
-const Expense = mongoose.model('Expense', expenseSchema);
-
+                                
 export default Expense;
