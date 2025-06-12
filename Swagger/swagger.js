@@ -28,7 +28,58 @@ const swaggerOptions = {
           scheme: "bearer",
           bearerFormat: "JWT",
         },
+      },components: {
+  securitySchemes: {
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    },
+  },
+  schemas: {
+    Expense: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          example: "1",
+        },
+        userId: {
+          type: "string",
+          example: "12",
+        },
+        amount: {
+          type: "number",
+          example: 5000,
+        },
+        description: {
+          type: "string",
+          example: "Transportation to school",
+        },
+        category: {
+          type: "string",
+          example: "Transport",
+        },
+        paymentMethod: {
+          type: "string",
+          example: "Cash",
+        },
+        date: {
+          type: "string",
+          format: "date",
+          example: "2025-06-11",
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time",
+        },
+        updatedAt: {
+          type: "string",
+          format: "date-time",
+        },
       },
+    },
+  },
       responses: {
         UnauthorizedError: {
           description: "Authentication required",
@@ -159,7 +210,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./Routes/user.route.js"],
+  apis: ["./Routes/user.route.js", "./Routes/expense.route.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
