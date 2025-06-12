@@ -9,7 +9,6 @@ import {
 import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
-  
 
 // CREATE an expense
 router.post('/', authMiddleware, createExpense);
@@ -26,4 +25,6 @@ router.put('/:id', authMiddleware, updateExpense);
 // DELETE an expense by ID
 router.delete('/:id', authMiddleware, deleteExpense);
 
-export default router;
+const expenseRoutes = router;
+
+export default expenseRoutes;
