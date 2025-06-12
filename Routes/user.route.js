@@ -1,6 +1,6 @@
 import express from "express";
-import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resendOtp, resetPassword, updateUser, verifyOtp } from "../Controllers/user.controller.js";
-import { createUserValidator, loginUserValidator, resendOtpValidator, resetPasswordValidator, verifyOtpValidator } from "../Middlewares/validator.js";
+import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resetPassword, updateUser,} from "../Controllers/user.controller.js";
+import { createUserValidator, loginUserValidator, resendOtpValidator, resetPasswordValidator, } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
 const router = express.Router();
@@ -19,18 +19,9 @@ const router = express.Router();
  *           type: string
  *           format: email
  *           example: "johndoe@example.com"
- *         firstname:
+ *         fullname:
  *           type: string
  *           example: "John"
- *         lastname:
- *           type: string
- *           example: "Doe"
- *         phoneNumber:
- *           type: string
- *           example: "+1234567890"
- *         role:
- *           type: string
- *           example: "user"
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -44,32 +35,20 @@ const router = express.Router();
  *       required:
  *         - email
  *         - password
- *         - firstname
- *         - lastname
- *         - phoneNumber
- *         - role
+ *         - fullname
  *       properties:
  *         email:
  *           type: string
  *           format: email
- *           example: "johndoe@example.com"
+ *           example: "string"
  *         password:
  *           type: string
  *           format: password
  *           minLength: 8
- *           example: "password123"
- *         firstname:
+ *           example: "string"
+ *         fullname:
  *           type: string
- *           example: "John"
- *         lastname:
- *           type: string
- *           example: "Doe"
- *         phoneNumber:
- *           type: string
- *           example: "+1234567890"
- *         role:
- *           type: string
- *           example: "user"
+ *           example: "string"
  *     UserLogin:
  *       type: object
  *       required:
@@ -79,11 +58,11 @@ const router = express.Router();
  *         email:
  *           type: string
  *           format: email
- *           example: "johndoe@example.com"
+ *           example: "string"
  *         password:
  *           type: string
  *           format: password
- *           example: "password123"
+ *           example: "string"
  *     UserUpdate:
  *       type: object
  *       properties:
@@ -227,85 +206,85 @@ router.post("/signup", createUserValidator, createUser);
 router.post("/signin", loginUserValidator, loginUser);
 
 
-/**
- * @swagger
- * /api/users/verifyOtp:
- *   post:
- *     summary: Verify One-Time-Password
- *     description: Verify One-Time-Password
- *     tags: [User]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               otp:
- *                 type: string
- *     responses:
- *       '201':
- *         description: Email verified successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Success message
- *       '400':
- *         description: Bad request
- *       '404':
- *         description: User not found
- *       '500':
- *         description: Internal server error
- */
-router.post("/verifyOtp", verifyOtpValidator, verifyOtp)
+// /**
+//  * @swagger
+//  * /api/users/verifyOtp:
+//  *   post:
+//  *     summary: Verify One-Time-Password
+//  *     description: Verify One-Time-Password
+//  *     tags: [User]
+//  *     security:
+//  *       - bearerAuth: []
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               email:
+//  *                 type: string
+//  *               otp:
+//  *                 type: string
+//  *     responses:
+//  *       '201':
+//  *         description: Email verified successfully
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 message:
+//  *                   type: string
+//  *                   description: Success message
+//  *       '400':
+//  *         description: Bad request
+//  *       '404':
+//  *         description: User not found
+//  *       '500':
+//  *         description: Internal server error
+//  */
+// router.post("/verifyOtp", verifyOtpValidator, verifyOtp)
 
 
-/**
- * @swagger
- * /api/users/resendOtp:
- *   post:
- *     summary: Resend One-Time-Password
- *     description: Resend One-Time-Password
- *     tags: [User]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *     responses:
- *       '201':
- *         description: OTP sent successfully. Please verify your email.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Success message
- *       '400':
- *         description: Bad request
- *       '404':
- *         description: User not Found
- *       '500':
- *         description: Internal server error
- */
+// /**
+//  * @swagger
+//  * /api/users/resendOtp:
+//  *   post:
+//  *     summary: Resend One-Time-Password
+//  *     description: Resend One-Time-Password
+//  *     tags: [User]
+//  *     security:
+//  *       - bearerAuth: []
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               email:
+//  *                 type: string
+//  *     responses:
+//  *       '201':
+//  *         description: OTP sent successfully. Please verify your email.
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 message:
+//  *                   type: string
+//  *                   description: Success message
+//  *       '400':
+//  *         description: Bad request
+//  *       '404':
+//  *         description: User not Found
+//  *       '500':
+//  *         description: Internal server error
+//  */
 
-router.post("/resendOtp", resendOtpValidator, resendOtp)
+// router.post("/resendOtp", resendOtpValidator, resendOtp)
 
 
 /**
@@ -513,7 +492,7 @@ router.patch('/change-password', protectedAction, changePassword)
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               password:
  *                 type: string
  *     responses:
  *       '201':

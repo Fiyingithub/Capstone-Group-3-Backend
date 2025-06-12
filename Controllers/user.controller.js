@@ -3,10 +3,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import logger from "../Utils/Logger.js";
-import { sendEmail } from "../Services/email.service.js";
+// import { sendEmail } from "../Services/email.service.js";
 import nodemailer from "nodemailer";
-import crypto from "crypto";
-import { error } from "console";
+// import crypto from "crypto";
+// import { error } from "console";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ dotenv.config();
 
 export const createUser = async (req, res) => {
   try {
-    const { email, password, firstname, lastname, phoneNumber, role } =
+    const { email, password, fullname } =
       req.body;
 
     const checkEmail = await User.findOne({ where: { email } });
@@ -26,20 +26,14 @@ export const createUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const otp = crypto.randomInt(100000, 999999).toString();
-    const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    // const otp = crypto.randomInt(100000, 999999).toString();
+    // const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
+    // const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
     const user = await User.create({
       email,
-      firstname,
-      lastname,
-      phoneNumber,
+      fullname,
       password: hashedPassword,
-      role: role || "user",
-      otpHash,
-      otpExpiresAt,
-      isVerified: false,
     });
 
     const transporter = nodemailer.createTransport({
@@ -56,10 +50,9 @@ export const createUser = async (req, res) => {
       subject: "Account created successfully",
       html: `
         <div>
-          <h1 style="text-align: center; color: #00008b;">OTP Verification Code</h1>
+          <h1 style="text-align: center; color: #00008b;">Account created successfully</h1>
           <p>Dear ${user.firstname},</p>
-          <p>You have successfully created your Account. Verify Your OTP</p>
-          <p style="font-weight: 700; font-size: 20px; background-color: #facc15; padding: 1rem; border-radius: 5px; text-align: center;">${otp}</p>
+          <p>You have successfully created your Account</p>
           <p>Do not share your password with no one and do not reply to this email</p>
           <p>Best regards</p>
           <a href="#" style="text-align: center; color: #00008b;">Trackwise Expense</a>
@@ -74,10 +67,7 @@ export const createUser = async (req, res) => {
       message: "User created successfully. Please verify your email.",
       data: {
         email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        phoneNumber: user.phoneNumber,
-        role: user.role,
+        fullname: user.fullname
       },
     });
   } catch (error) {
@@ -117,9 +107,7 @@ export const loginUser = async (req, res) => {
     let payload = {
       id: user.id,
       email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      role: user.role,
+      fullname: user.fullname
     };
     let token = jwt.sign({ payload }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -127,7 +115,7 @@ export const loginUser = async (req, res) => {
 
     payload.token = token;
 
-    logger.info(`${user.name} login successfully`);
+    logger.info(`${user.fullname} login successfully`);
     return res.status(201).json({
       status: true,
       message: "user login successfully",
@@ -319,10 +307,8 @@ export const changePassword = async (req, res) => {
 
     const userDTO = {
       email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
+      fullname: user.fullname
+
     };
 
     return res.status(201).json({
@@ -340,163 +326,163 @@ export const changePassword = async (req, res) => {
   }
 };
 
-export const verifyOtp = async (req, res) => {
-  const { email, otp } = req.body;
+// export const verifyOtp = async (req, res) => {
+//   const { email, otp } = req.body;
 
-  try {
-    const user = await User.findOne({ where: { email } });
+//   try {
+//     const user = await User.findOne({ where: { email } });
 
-    if (!user || !user.otpHash || !user.otpExpiresAt) {
-      return res.status(404).json({
-        status: false,
-        message: "Invalid or expired OTP",
-      });
-    }
+//     if (!user || !user.otpHash || !user.otpExpiresAt) {
+//       return res.status(404).json({
+//         status: false,
+//         message: "Invalid or expired OTP",
+//       });
+//     }
 
-    // Check if OTP expired
-    if (new Date() > user.otpExpiresAt) {
-      return res.status(400).json({
-        status: false,
-        message: "OTP has expired. Please request a new one.",
-      });
-    }
+//     // Check if OTP expired
+//     if (new Date() > user.otpExpiresAt) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "OTP has expired. Please request a new one.",
+//       });
+//     }
 
-    // Hash the input OTP
-    const hashedInputOtp = crypto
-      .createHash("sha256")
-      .update(otp)
-      .digest("hex");
+//     // Hash the input OTP
+//     const hashedInputOtp = crypto
+//       .createHash("sha256")
+//       .update(otp)
+//       .digest("hex");
 
-    // Compare with stored hash
-    if (hashedInputOtp !== user.otpHash) {
-      return res.status(400).json({
-        status: false,
-        message: "Invalid OTP. Please try again.",
-      });
-    }
+//     // Compare with stored hash
+//     if (hashedInputOtp !== user.otpHash) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "Invalid OTP. Please try again.",
+//       });
+//     }
 
-    // Update user verification status and clear OTP fields
-    user.isVerified = true;
-    user.otpHash = null;
-    user.otpExpiresAt = null;
-    await user.save();
+//     // Update user verification status and clear OTP fields
+//     user.isVerified = true;
+//     user.otpHash = null;
+//     user.otpExpiresAt = null;
+//     await user.save();
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
 
-    const mailOptions = {
-      from: "adegbengaoluwatosin61@gmail.com", // Sender email
-      to: user.email,
-      subject: "OTP Verified successfully",
-      html: `
-        <div>
-          <h1 style="text-align: center; color: #00008b;">OTP Verification Successfull</h1>
-          <p>Dear ${user.firstname},</p>
-          <p>You have successfully verify your Account. </p>
-          <p>Do not share your password with no one and do not reply to this email</p>
-          <p>Best regards</p>
-          <a href="#" style="text-align: center; color: #00008b;">Trackwise Expense</a>
-        </div>
-      `,
-    };
+//     const mailOptions = {
+//       from: "adegbengaoluwatosin61@gmail.com", // Sender email
+//       to: user.email,
+//       subject: "OTP Verified successfully",
+//       html: `
+//         <div>
+//           <h1 style="text-align: center; color: #00008b;">OTP Verification Successfull</h1>
+//           <p>Dear ${user.firstname},</p>
+//           <p>You have successfully verify your Account. </p>
+//           <p>Do not share your password with no one and do not reply to this email</p>
+//           <p>Best regards</p>
+//           <a href="#" style="text-align: center; color: #00008b;">Trackwise Expense</a>
+//         </div>
+//       `,
+//     };
 
-    await transporter.sendMail(mailOptions);
+//     await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({
-      status: true,
-      message: "Email verified successfully",
-    });
-  } catch (error) {
-    console.error("OTP Verification Error:", error);
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while verifying OTP",
-    });
-  }
-};
+//     return res.status(200).json({
+//       status: true,
+//       message: "Email verified successfully",
+//     });
+//   } catch (error) {
+//     console.error("OTP Verification Error:", error);
+//     return res.status(500).json({
+//       status: false,
+//       message: "An error occurred while verifying OTP",
+//     });
+//   }
+// };
 
-export const resendOtp = async (req, res) => {
-  try {
-    const { email } = req.body;
+// export const resendOtp = async (req, res) => {
+//   try {
+//     const { email } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+//     const user = await User.findOne({ where: { email } });
 
-    if (!user) {
-      return res.status(404).json({
-        status: false,
-        message: "User Does not exist",
-        data: [],
-      });
-    }
+//     if (!user) {
+//       return res.status(404).json({
+//         status: false,
+//         message: "User Does not exist",
+//         data: [],
+//       });
+//     }
 
-    if (user.isVerified === true) {
-      return res.status(404).json({
-        status: false,
-        message: "User Already verified",
-        data: [],
-      });
-    }
+//     if (user.isVerified === true) {
+//       return res.status(404).json({
+//         status: false,
+//         message: "User Already verified",
+//         data: [],
+//       });
+//     }
 
-    if (new Date() < user.otpExpiresAt) {
-      return res.status(400).json({
-        status: false,
-        message: "Former OTP has not expired. Please verify with otp.",
-      });
-    }
+//     if (new Date() < user.otpExpiresAt) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "Former OTP has not expired. Please verify with otp.",
+//       });
+//     }
 
-    const otp = crypto.randomInt(100000, 999999).toString();
-    const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+//     const otp = crypto.randomInt(100000, 999999).toString();
+//     const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
+//     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
-    user.otpHash = otpHash;
-    user.otpExpiresAt = otpExpiresAt;
+//     user.otpHash = otpHash;
+//     user.otpExpiresAt = otpExpiresAt;
 
-    await user.save();
+//     await user.save();
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
 
-    const mailOptions = {
-      from: "adegbengaoluwatosin61@gmail.com", // Sender email
-      to: user.email,
-      subject: "OTP Verification",
-      html: `
-        <div>
-          <h1 style="text-align: center; color: #00008b;">OTP Verification Code</h1>
-          <p>Dear ${user.firstname},</p>
-          <p>You requested for otp. Verify Your OTP</p>
-          <p style="font-weight: 700; font-size: 20px; background-color: #facc15; padding: 1rem; border-radius: 5px; text-align: center;">${otp}</p>
-          <p>Do not share your OTP with no one and do not reply to this email</p>
-          <p>Best regards</p>
-          <a href="#" style="text-align: center; color: #00008b;">Trackwise Expense</a>
-        </div>
-      `,
-    };
+//     const mailOptions = {
+//       from: "adegbengaoluwatosin61@gmail.com", // Sender email
+//       to: user.email,
+//       subject: "OTP Verification",
+//       html: `
+//         <div>
+//           <h1 style="text-align: center; color: #00008b;">OTP Verification Code</h1>
+//           <p>Dear ${user.firstname},</p>
+//           <p>You requested for otp. Verify Your OTP</p>
+//           <p style="font-weight: 700; font-size: 20px; background-color: #facc15; padding: 1rem; border-radius: 5px; text-align: center;">${otp}</p>
+//           <p>Do not share your OTP with no one and do not reply to this email</p>
+//           <p>Best regards</p>
+//           <a href="#" style="text-align: center; color: #00008b;">Trackwise Expense</a>
+//         </div>
+//       `,
+//     };
 
-    await transporter.sendMail(mailOptions);
+//     await transporter.sendMail(mailOptions);
 
-    return res.status(201).json({
-      status: true,
-      message: "OTP sent successfully. Please verify your email.",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 500,
-      message: "An error occurred",
-      error: true,
-    });
-  }
-};
+//     return res.status(201).json({
+//       status: true,
+//       message: "OTP sent successfully. Please verify your email.",
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       status: 500,
+//       message: "An error occurred",
+//       error: true,
+//     });
+//   }
+// };
 
 export const forgotPassword = async (req, res) => {
   try {
