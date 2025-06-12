@@ -1,17 +1,17 @@
-import Expense from '../models/expensecontroller.model.js';
+import Expense from '../models/expense.model.js';
 
 // CREATE
 export const createExpense = async (req, res) => {
   try {
-    const { amount, description, category, paymentMethod } = req.body;
-    const expense = new Expense({
-      user: req.user.id,  // coming from auth
+    const { amount, description, category, paymentMethod, date } = req.body;
+    const expense = await Expense.create({
+      userId: req.user.id,  // coming from auth
       amount,
       description,
       category,
       paymentMethod,
+      date,
     });
-    await expense.save();
     res.status(201).json(expense);
   } catch (err) {
     res.status(500).json({ message: 'Error creating expense', error: err.message });
@@ -21,7 +21,10 @@ export const createExpense = async (req, res) => {
 // GET All
 export const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find({ user: req.user.id }).sort({ date: -1 });
+    const expenses = await Expense.findAll({
+       where: { userId: req.user.id },
+      order: [['date', 'DESC']],
+    });
     res.json(expenses);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching expenses', error: err.message });
@@ -31,7 +34,11 @@ export const getExpenses = async (req, res) => {
 // GET one
 export const getExpense = async (req, res) => {
   try {
-    const expense = await Expense.findOne({ _id: req.params.id, user: req.user.id });
+    const expense = await Expense.findOne({ 
+       where: { id: req.params.id,
+        userId: req.user.id,
+              },
+    });
     if (!expense) return res.status(404).json({ message: 'Expense not found' });
     res.json(expense);
   } catch (err) {
@@ -42,22 +49,27 @@ export const getExpense = async (req, res) => {
 // UPDATE
 export const updateExpense = async (req, res) => {
   try {
-    const updated = await Expense.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
-      req.body,
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ message: 'Expense not found' });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ message: 'Error updating expense', error: err.message });
-  }
-};
+    const [updatedcount] = await Expense.update(req.body, {
+     where: {id: req.params.id,
+        userId: req.user.id,
+      },
+    });
+    
+    if (updatedcount ===0) return res.status(404).json({ message: 'Expense not found' });
+  const updatedExpense  = await Expense.fndOne({
+    where; {id : req.params.id, userId: req.user.id},
+  });
+
+  res.json(updatedExpense);
 
 // DELETE
 export const deleteExpense = async (req, res) => {
   try {
-    const deleted = await Expense.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    const deleted = await Expense.destroy({
+      where: {id: req.params.id,
+        userId: req.user.id,
+      },
+  });
     if (!deleted) return res.status(404).json({ message: 'Expense not found' });
     res.json({ message: 'Expense deleted successfully' });
   } catch (err) {
