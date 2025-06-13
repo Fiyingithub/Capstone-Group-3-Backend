@@ -1,19 +1,77 @@
-import express from 'express';
+import express from "express";
 import {
   createExpense,
   getExpenses,
   getExpense,
   updateExpense,
-  deleteExpense
-} from '../controllers/expense.controller.js';
-import authMiddleware from '../middleware/auth.js';
+  deleteExpense,
+} from "../Controllers/expense.controller.js";
+import { protectedAction } from "../Middlewares/protected.js";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Expenses:
+ *       type: object
+ *       properties:
+ *         amount:
+ *           type: integer
+ *           example: 12345
+ *         description:
+ *           type: string
+ *           example: "Food for the week"
+ *         category:
+ *           type: string
+ *           example: "Food"
+ *         date:
+ *           type: string
+ *           format: dateOnly
+ *           example: "2024-01-01"
+ *     Create Expense:
+ *       type: object
+ *       required:
+ *         - amount
+ *         - description
+ *         - category
+ *         - date
+ *       properties:
+ *         amount:
+ *           type: integer
+ *           example: 12345
+ *         description:
+ *           type: string
+ *           example: "Food for the week"
+ *         category:
+ *           type: string
+ *           example: "Food"
+ *         date:
+ *           type: date
+ *           example: "2025-05-12"
+ *     ApiResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Operation successful"
+ *         data:
+ *           type: object
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
 
 // CREATE an expense
 /**
  * @swagger
- * /expenses:
+ * /api/expense:
  *   post:
  *     summary: Create a new expense
  *     tags: [Expenses]
@@ -28,7 +86,6 @@ const router = express.Router();
  *             required:
  *               - amount
  *               - category
- *               - paymentMethod
  *               - date
  *             properties:
  *               amount:
@@ -40,9 +97,6 @@ const router = express.Router();
  *               category:
  *                 type: string
  *                 example: "Transport"
- *               paymentMethod:
- *                 type: string
- *                 example: "Cash"
  *               date:
  *                 type: string
  *                 format: date
@@ -54,12 +108,12 @@ const router = express.Router();
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.post('/', authMiddleware, createExpense);
+router.post("/", protectedAction, createExpense);
 
 // GET all expenses
 /**
  * @swagger
- * /expenses:
+ * /api/expense:
  *   get:
  *     summary: Get all expenses for the authenticated user
  *     tags: [Expenses]
@@ -80,12 +134,12 @@ router.post('/', authMiddleware, createExpense);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.get('/', authMiddleware, getExpenses);
+router.get("/", protectedAction, getExpenses);
 
 // GET a single expense by ID
 /**
  * @swagger
- * /expenses/{id}:
+ * /api/expense/{id}:
  *   get:
  *     summary: Get a specific expense by ID
  *     tags: [Expenses]
@@ -113,13 +167,13 @@ router.get('/', authMiddleware, getExpenses);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.get('/:id', authMiddleware, getExpense);
+router.get("/:id", protectedAction, getExpense);
 
 // UPDATE an expense by ID
 /**
  * @swagger
- * /expenses/{id}:
- *   put:
+ * /api/expense/{id}:
+ *   patch:
  *     summary: Update an existing expense
  *     tags: [Expenses]
  *     security:
@@ -144,8 +198,6 @@ router.get('/:id', authMiddleware, getExpense);
  *                 type: string
  *               category:
  *                 type: string
- *               paymentMethod:
- *                 type: string
  *               date:
  *                 type: string
  *                 format: date
@@ -164,12 +216,12 @@ router.get('/:id', authMiddleware, getExpense);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.put('/:id', authMiddleware, updateExpense);
+router.patch("/:id", protectedAction, updateExpense);
 
 // DELETE an expense by ID
 /**
  * @swagger
- * /expenses/{id}:
+ * /api/expense/{id}:
  *   delete:
  *     summary: Delete an expense
  *     tags: [Expenses]
@@ -201,7 +253,7 @@ router.put('/:id', authMiddleware, updateExpense);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.delete('/:id', authMiddleware, deleteExpense);
+router.delete("/:id", protectedAction, deleteExpense);
 
 const expenseRoutes = router;
 
