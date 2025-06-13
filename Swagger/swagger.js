@@ -57,8 +57,12 @@ const swaggerOptions = {
           example: "Transportation to school",
         },
         category: {
-          type: "string",
-          example: "Transport",
+          type: "array",
+          items: {
+            type: "string",
+            example: "Food",
+          },
+         example: ["Food", "Transport"],
         },
         paymentMethod: {
           type: "string",
