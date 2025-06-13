@@ -30,7 +30,7 @@ const router = express.Router();
  *       required:
  *         - incomeAmount
  *         - description
- *         - sourceOfInncome
+ *         - sourceOfIncome
  *         - date
  *       properties:
  *         amount:
@@ -80,7 +80,7 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - incomeAmount
- *               - sourceOfInncome
+ *               - sourceOfIncome
  *               - date
  *             properties:
  *               incomeAmount:
@@ -89,7 +89,7 @@ const router = express.Router();
  *               description:
  *                 type: string
  *                 example: "I have other businesses"
- *               sourceOfInncome:
+ *               sourceOfIncome:
  *                 type: string
  *                 example: "Transport"
  *               date:
@@ -110,13 +110,13 @@ router.post("/", createIncomeValidator, protectedAction, createIncome);
  * @swagger
  * /api/income:
  *   get:
- *     summary: Get all expenses for the authenticated user
+ *     summary: Get all income for the authenticated user
  *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: A list of expenses
+ *         description: A list of income
  *         content:
  *           application/json:
  *             schema:
