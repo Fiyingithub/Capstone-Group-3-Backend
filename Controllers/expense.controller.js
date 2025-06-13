@@ -58,12 +58,18 @@ export const updateExpense = async (req, res) => {
       },
     });
     
-    if (updatedcount ===0) return res.status(404).json({ message: 'Expense not found' });
+    if (updatedcount ===0) {
+      return res.status(404).json({ message: 'Expense not found' });
+    }
   const updatedExpense  = await Expense.findOne({
     where: {id : req.params.id, userId: req.user.id},
   });
 
   res.json(updatedExpense);
+  } catch(err) {
+    res.status(500).json ({ message: 'Error updating expense', error: err.message });
+  }
+};
 
 // DELETE
 export const deleteExpense = async (req, res) => {
