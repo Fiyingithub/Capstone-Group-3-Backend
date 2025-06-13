@@ -17,7 +17,7 @@ const Expense = sequelize.define('Expense', {
   category: {
     type: DataTypes.JSON,
     allowNull: false,
-    defaultValue:[],
+    defaultValue: [],
   },
   paymentMethod: {
     type: DataTypes.STRING, 
@@ -28,7 +28,7 @@ const Expense = sequelize.define('Expense', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
 }}, 
-  {
+{
   timestamps: true,
 });
                                 
