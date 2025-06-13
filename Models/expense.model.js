@@ -15,8 +15,9 @@ const Expense = sequelize.define('Expense', {
     allowNull: false,
   },
   category: {
-    type: DataTypes.STRING, 
+    type: DataTypes.JSON,
     allowNull: false,
+    defaultValue:[],
   },
   paymentMethod: {
     type: DataTypes.STRING, 
