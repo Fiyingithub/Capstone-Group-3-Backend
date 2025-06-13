@@ -51,7 +51,7 @@ export const createUser = async (req, res) => {
       html: `
         <div>
           <h1 style="text-align: center; color: #00008b;">Account created successfully</h1>
-          <p>Dear ${user.firstname},</p>
+          <p>Dear ${user.fullname},</p>
           <p>You have successfully created your Account</p>
           <p>Do not share your password with no one and do not reply to this email</p>
           <p>Best regards</p>
@@ -64,7 +64,7 @@ export const createUser = async (req, res) => {
 
     return res.status(201).json({
       status: true,
-      message: "User created successfully. Please verify your email.",
+      message: "User created successfully.",
       data: {
         email: user.email,
         fullname: user.fullname

@@ -159,7 +159,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./Routes/user.route.js", "./Routes/expense.route.js"],
+  apis: ["./Routes/user.route.js", "./Routes/expense.route.js", "./Routes/income.route.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

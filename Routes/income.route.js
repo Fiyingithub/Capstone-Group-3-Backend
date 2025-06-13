@@ -1,13 +1,7 @@
 import express from "express";
-import {
-  createExpense,
-  getExpenses,
-  getExpense,
-  updateExpense,
-  deleteExpense,
-} from "../Controllers/expense.controller.js";
 import { protectedAction } from "../Middlewares/protected.js";
-import { createExpenseValidator } from "../Middlewares/validator.js";
+import { createIncome, deleteIncome, getAllIncome, getIncome, updateIncome } from "../Controllers/income.controller.js";
+import { createIncomeValidator } from "../Middlewares/validator.js";
 
 const router = express.Router();
 
@@ -15,28 +9,28 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
- *     Expenses:
+ *     Income:
  *       type: object
  *       properties:
- *         amount:
+ *         incomeAmount:
  *           type: integer
  *           example: 12345
  *         description:
  *           type: string
  *           example: "Food for the week"
- *         category:
+ *         sourceOfInncome:
  *           type: string
  *           example: "Food"
  *         date:
  *           type: string
  *           format: dateOnly
  *           example: "2024-01-01"
- *     Create Expense:
+ *     Create Income:
  *       type: object
  *       required:
- *         - amount
+ *         - incomeAmount
  *         - description
- *         - category
+ *         - sourceOfInncome
  *         - date
  *       properties:
  *         amount:
@@ -72,10 +66,10 @@ const router = express.Router();
 // CREATE an expense
 /**
  * @swagger
- * /api/expense:
+ * /api/income:
  *   post:
- *     summary: Create a new expense
- *     tags: [Expenses]
+ *     summary: Create a user Income
+ *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -85,17 +79,17 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - amount
- *               - category
+ *               - incomeAmount
+ *               - sourceOfInncome
  *               - date
  *             properties:
- *               amount:
+ *               incomeAmount:
  *                 type: number
  *                 example: 5000
  *               description:
  *                 type: string
- *                 example: "Transportation to school"
- *               category:
+ *                 example: "I have other businesses"
+ *               sourceOfInncome:
  *                 type: string
  *                 example: "Transport"
  *               date:
@@ -104,20 +98,20 @@ const router = express.Router();
  *                 example: "2025-06-11"
  *     responses:
  *       201:
- *         description: Expense created successfully
+ *         description: Income created successfully
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.post("/", protectedAction, createExpenseValidator, createExpense);
+router.post("/", createIncomeValidator, protectedAction, createIncome);
 
-// GET all expenses
+// GET all income by a User
 /**
  * @swagger
- * /api/expense:
+ * /api/income:
  *   get:
  *     summary: Get all expenses for the authenticated user
- *     tags: [Expenses]
+ *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -128,22 +122,23 @@ router.post("/", protectedAction, createExpenseValidator, createExpense);
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Expense'
+ *                 $ref: '#/components/schemas/Income'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.get("/", protectedAction, getExpenses);
+router.get("/", protectedAction, getAllIncome);
 
-// GET a single expense by ID
+
+// GET a single Income by ID
 /**
  * @swagger
- * /api/expense/{id}:
+ * /api/income/{id}:
  *   get:
  *     summary: Get a specific expense by ID
- *     tags: [Expenses]
+ *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -152,14 +147,14 @@ router.get("/", protectedAction, getExpenses);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the expense to retrieve
+ *         description: ID of the income to retrieve
  *     responses:
  *       200:
- *         description: Expense retrieved successfully
+ *         description: Income retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Expense'
+ *               $ref: '#/components/schemas/Income'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
@@ -168,15 +163,15 @@ router.get("/", protectedAction, getExpenses);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.get("/:id", protectedAction, getExpense);
+router.get("/:id", protectedAction, getIncome);
 
-// UPDATE an expense by ID
+// UPDATE an Inome by ID
 /**
  * @swagger
- * /api/expense/{id}:
+ * /api/income/{id}:
  *   patch:
- *     summary: Update an existing expense
- *     tags: [Expenses]
+ *     summary: Update an existing income
+ *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -185,7 +180,7 @@ router.get("/:id", protectedAction, getExpense);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the expense to update
+ *         description: ID of the income to update
  *     requestBody:
  *       required: true
  *       content:
@@ -193,18 +188,18 @@ router.get("/:id", protectedAction, getExpense);
  *           schema:
  *             type: object
  *             properties:
- *               amount:
+ *               incomeAmount:
  *                 type: number
  *               description:
  *                 type: string
- *               category:
+ *               sourceOfInncome:
  *                 type: string
  *               date:
  *                 type: string
  *                 format: date
  *     responses:
  *       200:
- *         description: Expense updated successfully
+ *         description: Income updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -217,15 +212,15 @@ router.get("/:id", protectedAction, getExpense);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.patch("/:id", protectedAction, updateExpense);
+router.patch("/:id", protectedAction, updateIncome);
 
-// DELETE an expense by ID
+// DELETE an Income by ID
 /**
  * @swagger
- * /api/expense/{id}:
+ * /api/income/{id}:
  *   delete:
- *     summary: Delete an expense
- *     tags: [Expenses]
+ *     summary: Delete an user Income
+ *     tags: [Income]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -234,10 +229,10 @@ router.patch("/:id", protectedAction, updateExpense);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the expense to delete
+ *         description: ID of the income to delete
  *     responses:
  *       200:
- *         description: Expense deleted successfully
+ *         description: Income deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -245,7 +240,7 @@ router.patch("/:id", protectedAction, updateExpense);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Expense deleted successfully
+ *                   example: Income deleted successfully
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
@@ -254,8 +249,8 @@ router.patch("/:id", protectedAction, updateExpense);
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.delete("/:id", protectedAction, deleteExpense);
+router.delete("/:id", protectedAction, deleteIncome);
 
-const expenseRoutes = router;
+const incomeRoutes = router;
 
-export default expenseRoutes;
+export default incomeRoutes;
