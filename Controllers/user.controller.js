@@ -14,8 +14,7 @@ dotenv.config();
 
 export const createUser = async (req, res) => {
   try {
-    const { email, password, fullname } =
-      req.body;
+    const { email, password, fullname } = req.body;
 
     const checkEmail = await User.findOne({ where: { email } });
     if (checkEmail) {
@@ -62,12 +61,19 @@ export const createUser = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
+    res.cookie("token", token, {
+      httpOnly: true, // Prevent JavaScript access (important for security)
+      secure: true, // Only send over HTTPS (set to false in dev)
+      sameSite: "strict", // Prevent CSRF
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
     return res.status(201).json({
       status: true,
       message: "User created successfully.",
       data: {
         email: user.email,
-        fullname: user.fullname
+        fullname: user.fullname,
       },
     });
   } catch (error) {
@@ -107,7 +113,7 @@ export const loginUser = async (req, res) => {
     let payload = {
       id: user.id,
       email: user.email,
-      fullname: user.fullname
+      fullname: user.fullname,
     };
     let token = jwt.sign({ payload }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -307,8 +313,7 @@ export const changePassword = async (req, res) => {
 
     const userDTO = {
       email: user.email,
-      fullname: user.fullname
-
+      fullname: user.fullname,
     };
 
     return res.status(201).json({

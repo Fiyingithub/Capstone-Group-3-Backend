@@ -26,6 +26,10 @@ const Income = sequelize.define(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    filePath: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
   },
   {
     timestamps: true,

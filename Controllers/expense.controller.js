@@ -7,6 +7,7 @@ export const createExpense = async (req, res) => {
   try {
     const { id } = req.user;
     const { amount, description, category, date } = req.body;
+    const categories = Array.isArray(category) ? category : [category];
 
     const user = await User.findByPk(id);
     if (!user) {
@@ -21,7 +22,7 @@ export const createExpense = async (req, res) => {
       userId: id, // coming from auth
       amount,
       description,
-      category,
+      category: categories,
       date: date || new Date(),
     });
 
@@ -123,7 +124,6 @@ export const updateExpense = async (req, res) => {
     });
   }
 };
-
 
 // DELETE
 export const deleteExpense = async (req, res) => {

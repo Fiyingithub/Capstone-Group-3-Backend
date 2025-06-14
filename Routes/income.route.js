@@ -2,6 +2,7 @@ import express from "express";
 import { protectedAction } from "../Middlewares/protected.js";
 import { createIncome, deleteIncome, getAllIncome, getIncome, updateIncome } from "../Controllers/income.controller.js";
 import { createIncomeValidator } from "../Middlewares/validator.js";
+import { upload } from "../Config/storage.config.js";
 
 const router = express.Router();
 
@@ -63,6 +64,8 @@ const router = express.Router();
  *       bearerFormat: JWT
  */
 
+
+
 // CREATE an expense
 /**
  * @swagger
@@ -75,7 +78,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -92,6 +95,9 @@ const router = express.Router();
  *               sourceOfIncome:
  *                 type: string
  *                 example: "Transport"
+ *               filename:
+ *                 type: string
+ *                 format: binary
  *               date:
  *                 type: string
  *                 format: date
@@ -103,7 +109,8 @@ const router = express.Router();
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.post("/", createIncomeValidator, protectedAction, createIncome);
+
+router.post("/", createIncomeValidator, protectedAction, upload.single('filename') , createIncome);
 
 // GET all income by a User
 /**

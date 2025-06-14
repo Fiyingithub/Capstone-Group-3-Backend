@@ -9,6 +9,10 @@ export const createIncome = async (req, res) => {
     const { id } = req.user;
     const { incomeAmount, sourceOfIncome, description, date } = req.body;
 
+    const file = req.file;
+    const filePath = file ? file.path : null;
+    const fileName = file ? file.filename : null;
+
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(400).json({
@@ -23,6 +27,7 @@ export const createIncome = async (req, res) => {
       incomeAmount,
       description,
       sourceOfIncome,
+      filePath,
       date: date || new Date(),
     });
 

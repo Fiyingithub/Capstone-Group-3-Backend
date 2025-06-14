@@ -8,6 +8,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./Swagger/swagger.js";
 import helmet from "helmet";
 import { sequelize } from "./Config/db.config.js";
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ app.use(
 
 // CORS
 const corsOptions = {
-  origin:  "*",
+  origin: "*",
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -35,8 +36,24 @@ app.use(cors(corsOptions));
 app.use(LoggerErrorHandler);
 app.use(LoggerRequestHandler);
 
+app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+
+// Download
+app.get("/download/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join("uploads", filename);
+  if (!fs.existsSync) {
+    return errorResponse(res, 404, "File not found");
+  }
+
+  res.download(filePath, (err) => {
+    if (err) {
+      return errorResponse(res, 500, "Error downloading file");
+    }
+  });
+});
 
 // Swagger Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

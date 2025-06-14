@@ -96,8 +96,10 @@ const router = express.Router();
  *                 type: string
  *                 example: "Transportation to school"
  *               category:
- *                 type: string
- *                 example: "Transport"
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Transport", "Food"]
  *               date:
  *                 type: string
  *                 format: date
