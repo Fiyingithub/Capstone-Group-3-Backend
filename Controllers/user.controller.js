@@ -61,13 +61,6 @@ export const createUser = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.cookie("token", token, {
-      httpOnly: true, // Prevent JavaScript access (important for security)
-      secure: true, // Only send over HTTPS (set to false in dev)
-      sameSite: "strict", // Prevent CSRF
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
-
     return res.status(201).json({
       status: true,
       message: "User created successfully.",
@@ -121,6 +114,13 @@ export const loginUser = async (req, res) => {
 
     payload.token = token;
 
+    res.cookie("token", token, {
+      httpOnly: true, // Prevent JavaScript access (important for security)
+      secure: true, // Only send over HTTPS (set to false in dev)
+      sameSite: "strict", // Prevent CSRF
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+    
     logger.info(`${user.fullname} login successfully`);
     return res.status(201).json({
       status: true,
