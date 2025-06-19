@@ -3,10 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import logger from "../Utils/Logger.js";
-// import { sendEmail } from "../Services/email.service.js";
 import nodemailer from "nodemailer";
 // import crypto from "crypto";
-// import { error } from "console";
+// import { sendSMS } from "../Services/sms.service.js";
 
 dotenv.config();
 
@@ -29,10 +28,14 @@ export const createUser = async (req, res) => {
     // const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
     // const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
+    // console.log("ONE_TIME_PASSWORD",otp)
+    // await sendSMS(phoneNumber, otp)
+
     const user = await User.create({
       email,
       fullname,
       password: hashedPassword,
+      // phoneNumber
     });
 
     const transporter = nodemailer.createTransport({
@@ -67,6 +70,7 @@ export const createUser = async (req, res) => {
       data: {
         email: user.email,
         fullname: user.fullname,
+        // phoneNumber: user.phoneNumber
       },
     });
   } catch (error) {
@@ -573,6 +577,38 @@ export const resetPassword = async (req, res) => {
       status: true,
       message: "Password reset successfully",
       data: userDTO,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred",
+      error: true,
+    });
+  }
+};
+
+
+export const saveFcmToken = async (req, res) => {
+  try {
+    const { userId, fcmToken } = req.body;
+    if (!userId || !fcmToken){
+      return res.status(400).json({ 
+        error: 'userId & fcmToken required'
+       });
+    }
+      
+    const user = await User.findByPk(userId);
+    if (!user){
+      return res.status(404).json({ 
+        error: 'User not found'
+      });
+    }
+
+    user.fcmToken = fcmToken;
+    await user.save();
+
+    res.status(201).json({ 
+      message: 'FCM token saved' 
     });
   } catch (error) {
     return res.status(500).json({

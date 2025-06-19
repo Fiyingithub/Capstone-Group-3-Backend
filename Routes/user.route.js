@@ -1,5 +1,5 @@
 import express from "express";
-import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resetPassword, updateUser,} from "../Controllers/user.controller.js";
+import { changePassword, createUser, deleteUser, forgotPassword, getAllUsers, getUser, loginUser, resetPassword, saveFcmToken, updateUser,} from "../Controllers/user.controller.js";
 import { createUserValidator, loginUserValidator, resendOtpValidator, resetPasswordValidator, } from "../Middlewares/validator.js";
 import { protectedAction } from "../Middlewares/protected.js";
 
@@ -323,6 +323,49 @@ router.post("/signin", loginUserValidator, loginUser);
  *         description: Internal server error
  */
 router.post('/forgot-password', resendOtpValidator, forgotPassword)
+
+
+
+/**
+ * @swagger
+ * /api/users/save-fcm-token:
+ *   post:
+ *     summary: Save user device token
+ *     description: Save user device token
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "string"
+ *               fcmToken:
+ *                 type: string
+ *                 example: "string"
+ *     responses:
+ *       '201':
+ *         description: FCM token saved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Bad request
+ *       '404':
+ *         description: User not Found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/save-fcm-token', protectedAction, saveFcmToken)
 
 /**
  * @swagger

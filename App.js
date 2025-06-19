@@ -9,6 +9,7 @@ import swaggerSpec from "./Swagger/swagger.js";
 import helmet from "helmet";
 import { sequelize } from "./Config/db.config.js";
 import cookieParser from 'cookie-parser';
+import "./Utils/cronHandler.js"
 
 dotenv.config();
 

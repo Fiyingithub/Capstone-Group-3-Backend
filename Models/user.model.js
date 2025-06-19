@@ -21,6 +21,10 @@ const User = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    fcmToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     // role: {
     //   type: DataTypes.ENUM("user", "admin"),
