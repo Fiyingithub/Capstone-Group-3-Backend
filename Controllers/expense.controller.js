@@ -22,7 +22,7 @@ export const createExpense = async (req, res) => {
 export const getExpenses = async (req, res) => {
   try {
     const expenses = await Expense.findAll({
-       where: { userId: req.user.id },
+      where: { userId: req.user.id },
       order: [['date', 'DESC']],
     });
     res.json(expenses);
@@ -35,7 +35,7 @@ export const getExpenses = async (req, res) => {
 export const getExpense = async (req, res) => {
   try {
     const expense = await Expense.findOne({ 
-       where: { id: req.params.id,
+      where: { id: req.params.id,
         userId: req.user.id,
               },
     });
@@ -50,7 +50,7 @@ export const getExpense = async (req, res) => {
 export const updateExpense = async (req, res) => {
   try {
     const [updatedcount] = await Expense.update(req.body, {
-     where: {id: req.params.id,
+    where: {id: req.params.id,
         userId: req.user.id,
       },
     });
