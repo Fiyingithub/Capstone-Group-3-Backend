@@ -2,6 +2,7 @@ import Expense from "../Models/expense.model.js";
 import Income from "../Models/income.model.js";
 import User from "../Models/user.model.js";
 import logger from "../Utils/Logger.js";
+import { uploadToCloudinary } from "../Utils/uploadToCloudinary.js";
 
 // CREATE
 export const createIncome = async (req, res) => {
@@ -10,8 +11,14 @@ export const createIncome = async (req, res) => {
     const { incomeAmount, sourceOfIncome, description, date } = req.body;
 
     const file = req.file;
-    const filePath = file ? file.path : null;
-    const fileName = file ? file.filename : null;
+    let imageString = null;
+    // const filePath = file ? file.path : null;
+    // const fileName = file ? file.filename : null;
+
+    if (file) {
+      imageString = await uploadToCloudinary(req.file.buffer, req.file.originalname);
+      logger.info("IMAGE UPLOADED:", imageString)
+    }
 
     const user = await User.findByPk(id);
     if (!user) {
@@ -27,7 +34,7 @@ export const createIncome = async (req, res) => {
       incomeAmount,
       description,
       sourceOfIncome,
-      filePath,
+      filePath: imageString,
       date: date || new Date(),
     });
 

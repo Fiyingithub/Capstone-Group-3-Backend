@@ -9,12 +9,12 @@ export function sendSMS(phoneNumber, message) {
     
   const data = {
     to: phoneNumber,
-    from: process.env.APP_NAME,
+    from: 'trackwise',
     sms: message,
     type: "plain",
     api_key: process.env.TERMII_API_KEY,
     channel: "generic",
-  };
+  }
   
   const options = {
     method: "POST",

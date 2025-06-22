@@ -1,19 +1,20 @@
 import downloadProfile from "../Controllers/download.controller.js";
 import express from "express";
+import { protectedAction } from "../Middlewares/protected.js";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/download/{filename}:
+ * /api/download/{incomeId}:
  *   get:
- *     summary: Download image by file name
+ *     summary: Download image by file name(protected)
  *     tags: [Download]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: filename
+ *         name: incomeId
  *         required: true
  *         schema:
  *           type: string
@@ -38,7 +39,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/ServerError'
  */
 
-router.get("/:filename", downloadProfile);
+router.get("/:incomeId", protectedAction, downloadProfile);
 
 const downloadRoutes = router;
 

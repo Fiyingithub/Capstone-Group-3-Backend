@@ -2,7 +2,8 @@ import express from "express";
 import { protectedAction } from "../Middlewares/protected.js";
 import { createIncome, deleteIncome, getAllIncome, getIncome, updateIncome } from "../Controllers/income.controller.js";
 import { createIncomeValidator } from "../Middlewares/validator.js";
-import { upload } from "../Config/storage.config.js";
+import upload from "../Middlewares/upload.js";
+
 
 const router = express.Router();
 
