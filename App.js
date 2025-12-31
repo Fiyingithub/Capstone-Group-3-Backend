@@ -7,13 +7,11 @@ import routes from "./Routes/index.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./Swagger/swagger.js";
 import helmet from "helmet";
-import { sequelize } from "./Config/db.config.js";
 import cookieParser from 'cookie-parser';
 import "./Utils/cronHandler.js"
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4000;
 const app = express();
 app.use(express.json());
 
@@ -80,13 +78,16 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    app.listen(PORT, () => {
-      console.info("Server is running on port:", PORT);
-    });
-  })
-  .catch((err) => {
-    console.log("Error syncing database: ", err);
-  });
+
+export default app
+
+// sequelize
+//   .sync({ alter: true })
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.info("Server is running on port:", PORT);
+//     });
+//   })
+//   .catch((err) => {
+//     console.log("Error syncing database: ", err);
+//   });

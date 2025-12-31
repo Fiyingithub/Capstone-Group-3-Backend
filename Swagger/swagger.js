@@ -1,5 +1,11 @@
 // swagger/swaggerConfig.js
 import swaggerJSDoc from "swagger-jsdoc";
+import ENV from "../Config/env.config.js";
+
+
+
+const servers = ENV.nodeEnv === "development" ? `http://localhost:${ENV.port}` : ENV.baseUrl.production;
+
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -12,11 +18,7 @@ const swaggerOptions = {
         name: "Group 3",
       },
     },
-    servers: [
-      {
-        url: "https://capstone-group-3-backend.onrender.com",
-      },
-    ],
+    servers: [{ url: servers }],
     schemes: {
       http: "http",
       https: "https",
