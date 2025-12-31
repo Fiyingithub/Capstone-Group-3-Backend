@@ -11,10 +11,13 @@ sequelize
     app.listen(ENV.port, () => {
       // Start worker safely after server is running
       import("./Jobs/Workers/email.worker.js")
-        .then(({ startEmailWorker }) => startEmailWorker())
+        .then(({ startEmailWorker }) => {
+          startEmailWorker();
+          logger.info("Email worker started");
+        })
         .catch((err) => {
           logger.error("Failed to start email worker:", err);
-        });
+        })
 
       logger.info(`Server is running on port: ${ENV.port}`);
     });
