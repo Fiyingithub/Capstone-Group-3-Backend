@@ -4,7 +4,6 @@ import { createIncome, deleteIncome, getAllIncome, getIncome, updateIncome } fro
 import { createIncomeValidator } from "../Middlewares/validator.js";
 import upload from "../Middlewares/upload.js";
 
-
 const router = express.Router();
 
 /**
